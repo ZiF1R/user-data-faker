@@ -29,8 +29,7 @@ class UglifyService {
   }
 
   addRandomSymbol(str) {
-    const indexToAddFrom =
-      Math.round(this.randomizeFn(str.length + 1, 0));
+    const indexToAddFrom = this.randomizeFn(str.length - 1, 0);
     const symbolToAdd =
       this.symbols[this.randomizeFn(this.symbols.length, 0)];
     const strArr = str.split("");
@@ -39,16 +38,14 @@ class UglifyService {
   }
 
   deleteRandomSymbol(str) {
-    const indexToRemove =
-      Math.round(this.randomizeFn(str.length, 0));
+    const indexToRemove = this.randomizeFn(str.length - 1, 0);
     const strArr = str.split("");
     strArr.splice(indexToRemove, 1);
     return strArr.join("");
   }
 
   swapNearSymbols(str) {
-    const firstIndexToSwap =
-      Math.round(this.randomizeFn(str.length - 1, 0));
+    const firstIndexToSwap = this.randomizeFn(str.length - 1, 0);
     const strArr = str.split("");
     const nearSymbols = strArr.splice(firstIndexToSwap, 2).reverse();
     strArr.splice(firstIndexToSwap, 0, ...nearSymbols);
@@ -61,13 +58,14 @@ class UglifyService {
   }
 
   uglify(data) {
+    const result = [...data];
     this.PossibleError = this.randomizeFn(101, 0) / 100;
     for (let i = 0; i < this.errorsCount + this.possibleError; i++) {
-      const indexToUglify = this.randomizeFn(data.length, 0);
-      data[indexToUglify] = this.uglifyString(data[indexToUglify]);
+      const indexToUglify = this.randomizeFn(result.length, 0);
+      result[indexToUglify] = this.uglifyString(result[indexToUglify]);
     }
 
-    return data;
+    return result;
   }
 }
 

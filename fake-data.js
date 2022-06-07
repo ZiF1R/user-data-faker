@@ -4,7 +4,7 @@ const { faker } = require("@faker-js/faker");
 const dataUglifyService = require("./data-uglify.service");
 dataUglifyService.randomizeFn = faker.mersenne.rand;
 
-const setSeed = seed => faker.mersenne.seed(seed);
+const setSeed = seed => faker.seed(seed);
 const setLocale = locale => faker.setLocale(locale);
 const setErrors = errorsPercentage =>
   dataUglifyService.ErrorsCount = errorsPercentage;
@@ -18,7 +18,6 @@ const getFullName = () => ({
 const getAddress = () => ({
   city: faker.address.city(),
   street: faker.address.streetAddress(true),
-  // building: faker.address.buildingNumber()
 });
 
 const getPhone = () => faker.phone.phoneNumber();
@@ -28,9 +27,9 @@ const getNextPage = () => {
 
   for (let i = 0; i < 20; i++) {
     const id = faker.mersenne.rand(1_000_000, 100_000);
-    const fullName = Object.values(getFullName()).join(" ");
-    const address = Object.values(getAddress()).join(", ");
-    const phone = getPhone();
+    let fullName = faker.name.findName();
+    let address = Object.values(getAddress()).join(", ");
+    let phone = getPhone();
 
     const row = {
       index: i + 1,
@@ -40,11 +39,17 @@ const getNextPage = () => {
       phone
     };
 
-    [row.fullName, row.address, row.phone] =
-      dataUglifyService.uglify([row.fullName, row.address, row.phone]);
-
     rows.push(row);
   }
+
+  // uglify data in different loops
+  // because if it will be in one loop
+  // it will produce unexpected behavior
+  rows.map(row => {
+    [row.fullName, row.address, row.phone] =
+      dataUglifyService.uglify([row.fullName, row.address, row.phone]);
+    return row;
+  });
 
   return rows;
 };
