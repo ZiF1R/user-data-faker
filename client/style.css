@@ -1,14 +1,14 @@
 body {
+  display: flex;
   height: 100vh;
   padding: 50px 0 0;
 }
 
 main {
-  display: flex;
   position: relative;
-  overflow-y: scroll;
-  height: 500px;
-  max-width: fit-content;
+  /* overflow: scroll;
+  height: 700px; */
+  /* margin: 0 50px; */
 }
 
 h1, h2 {
@@ -17,14 +17,10 @@ h1, h2 {
 }
 
 aside {
-  position: sticky;
-  top: 20px;
+  position: relative;
+  top: 70px;
   width: 300px;
-  margin: 20px 60px 0;
-}
-
-table {
-  height: fit-content;
+  margin: 20px 50px 0;
 }
 
 aside > * {
