@@ -1,14 +1,13 @@
 body {
-  display: flex;
   height: 100vh;
   padding: 50px 0 0;
 }
 
 main {
+  display: flex;
+  justify-content: flex-end;
   position: relative;
-  /* overflow: scroll;
-  height: 700px; */
-  /* margin: 0 50px; */
+  padding: 0 50px;
 }
 
 h1, h2 {
@@ -17,14 +16,25 @@ h1, h2 {
 }
 
 aside {
-  position: relative;
-  top: 70px;
-  width: 300px;
-  margin: 20px 50px 0;
+  position: fixed;
+  top: 170px;
+  left: 50px;
+  width: 20%;
+  min-width: 200px;
+  /* margin: 20px 50px 0; */
 }
 
 aside > * {
   width: 100%;
+}
+
+table {
+  width: 67vw!important;
+  height: 100%;
+}
+
+table td {
+  word-break: break-all;
 }
 
 .table-placeholder {
