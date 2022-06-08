@@ -33,13 +33,13 @@ function debounce(func, timeout = 300) {
   };
 }
 
-function rerender() {
+async function rerender() {
   loading = true;
   setTimeout(() => loading = false, 50);
   tbody.innerHTML = "";
 
   for (let i = 0; i < PAGE; i++) {
-    generate(i + 1);
+    await generate(i + 1);
   }
 }
 
