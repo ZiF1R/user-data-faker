@@ -11,7 +11,6 @@ const random = () => Math.floor(Math.random() * (1e10 + 0) - 0);
 
 let PAGE = 1;
 let loading = false;
-let fakeData = [];
 seed.value = random();
 
 const generator = debounce(rerender);
@@ -38,25 +37,22 @@ function rerender() {
   loading = true;
   setTimeout(() => loading = false, 50);
   tbody.innerHTML = "";
-  fakeData = [];
 
   for (let i = 0; i < PAGE; i++) {
     generate(i + 1);
   }
 }
 
-function generate(page = PAGE) {
+async function generate(page = PAGE) {
   errors.value = +errors.value ?? 0;
   seed.value = +seed.value ?? 0;
-  getData(page).then(data => {
-    fakeData = fakeData.concat(data);
-    fillTable(data);
-  });
+  const data = await getData(page);
+  fillTable(data);
 }
 
 async function getData(page) {
   const data =
-    await fetch("http://localhost:8000/?" +
+    await fetch("/data?" +
       `page=${page}&` +
       `seed=${seed.value}&` +
       `errors=${errors.value}&` +
@@ -84,33 +80,9 @@ function createRow(row) {
   return tr;
 }
 
-function downloadCSV() {
-  let csv = "";
-  for (let row = 0; row < fakeData.length; row++) {
-    const keysAmount = Object.keys(fakeData[row]).length;
-    let keysCounter = 0;
-
-    if (row === 0) {
-      for (const key in fakeData[row]) {
-        csv += key + (keysCounter + 1 < keysAmount ? ";" : "\r\n");
-        keysCounter++;
-      }
-      keysCounter = 0;
-      for (const key in fakeData[row]) {
-        csv += fakeData[row][key] +
-          (keysCounter + 1 < keysAmount ? ";" : "\r\n");
-        keysCounter++;
-      }
-    } else {
-      for (const key in fakeData[row]) {
-        csv += fakeData[row][key] +
-          (keysCounter + 1 < keysAmount ? ";" : "\r\n");
-        keysCounter++;
-      }
-    }
-
-    keysCounter = 0;
-  }
+async function downloadCSV() {
+  const data = await fetch("/data/csv");
+  const csv = await data.text();
 
   const link = document.createElement("a");
   link.id = "download-csv";

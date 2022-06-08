@@ -3,16 +3,19 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const json2csv = require("json2csv");
 const { setSeed, setLocale, getNextPage, setErrors } = require("./fake-data");
 
 const PORT = process.env.PORT || 8000;
+let fakeData = [];
+
+const parser = new json2csv.Parser({ delimiter: ";" });
 
 const mimeLookup = {
   ".html": "text/html",
   ".css": "text/css",
   ".js": "application/javascript",
 };
-
 
 const staticLocation = "./client/";
 const getFileUrl = url => (url === "/" ? "index.html" : url);
@@ -30,15 +33,24 @@ const getNewPage = url => {
   setSeed(page + seed);
   setErrors(errors);
 
-  return getNextPage(page);
+  if (page === 1)
+    fakeData = [];
+
+  const data = getNextPage(page);
+  fakeData = fakeData.concat(data);
+
+  return data;
 };
 
 const server = http.createServer((req, res) => {
   if (req.method === "GET") {
-    if (req.url.startsWith("/?page")) {
+    if (req.url.startsWith("/data?")) {
       const response = getNewPage(req.url);
       res.end(JSON.stringify(response));
-
+      return;
+    } else if (req.url.startsWith("/data/csv")) {
+      const csv = parser.parse(fakeData);
+      res.end(csv);
       return;
     }
 

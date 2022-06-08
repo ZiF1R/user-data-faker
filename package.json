@@ -1,5 +1,14 @@
 {
-  "devDependencies": {
-    "@faker-js/faker": "^7.1.0"
+  "name": "6th-task",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "ZiF1R <do-alex03@mail.ru>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^7.1.0",
+    "json2csv": "^5.0.7"
   }
 }

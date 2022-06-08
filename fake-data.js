@@ -9,12 +9,6 @@ const setLocale = locale => faker.setLocale(locale);
 const setErrors = errorsPercentage =>
   dataUglifyService.ErrorsCount = errorsPercentage;
 
-// const getFullName = () => ({
-//   firstName: faker.name.firstName(),
-//   lastName: faker.name.lastName(),
-//   middleName: faker.name.middleName(),
-// });
-
 const getAddress = () => ({
   city: faker.address.city(),
   street: faker.address.streetAddress(true),
