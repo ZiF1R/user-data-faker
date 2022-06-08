@@ -25,41 +25,62 @@ class UglifyService {
   }
 
   set PossibleError(probability) {
-    this.possibleError = probability <= this.remainder ? 1 : 0;
+    this.possibleError = probability < this.remainder ? 1 : 0;
   }
 
-  addRandomSymbol(str) {
-    const indexToAddFrom = this.randomizeFn(str.length - 1, 0);
+  set Locale(locale) {
+    this.symbols = [].concat(getCharsByCodes(48, 57));
+
+    if (locale === "ru") {
+      this.symbols = [].concat(
+        getCharsByCodes(1040, 1103),
+      );
+    } else {
+      this.symbols = [].concat(
+        getCharsByCodes(65, 90),
+        getCharsByCodes(97, 122),
+      );
+    }
+  }
+
+  addRandomSymbol(strArr, index) {
     const symbolToAdd =
       this.symbols[this.randomizeFn(this.symbols.length, 0)];
-    const strArr = str.split("");
-    strArr.splice(indexToAddFrom, 0, symbolToAdd);
-    return strArr.join("");
+
+    strArr.splice(index, 0, symbolToAdd);
+    return strArr;
   }
 
-  deleteRandomSymbol(str) {
-    const indexToRemove = this.randomizeFn(str.length - 1, 0);
-    const strArr = str.split("");
-    strArr.splice(indexToRemove, 1);
-    return strArr.join("");
+  deleteRandomSymbol(strArr, index) {
+    strArr.splice(index, 1);
+    return strArr;
   }
 
-  swapNearSymbols(str) {
-    const firstIndexToSwap = this.randomizeFn(str.length - 1, 0);
-    const strArr = str.split("");
-    const nearSymbols = strArr.splice(firstIndexToSwap, 2).reverse();
-    strArr.splice(firstIndexToSwap, 0, ...nearSymbols);
-    return strArr.join("");
+  swapNearSymbols(strArr, index) {
+    const nearSymbols = strArr.splice(index, 2).reverse();
+    strArr.splice(index, 0, ...nearSymbols);
+    return strArr;
   }
 
   uglifyString(str) {
     const uglifyMethodIndex = this.randomizeFn(3, 0);
-    return this.uglifyMethods[uglifyMethodIndex].call(this, str);
+    const indexToUglify = this.randomizeFn(str.length - 1, 0);
+    const strArr = str.split("");
+
+    const result =
+      this.uglifyMethods[uglifyMethodIndex]
+        .call(this, strArr, indexToUglify)
+        .join("");
+
+    return result;
   }
 
-  uglify(data) {
+  uglify(data, locale) {
     const result = [...data];
+
+    this.Locale = locale;
     this.PossibleError = this.randomizeFn(101, 0) / 100;
+
     for (let i = 0; i < this.errorsCount + this.possibleError; i++) {
       const indexToUglify = this.randomizeFn(result.length, 0);
       result[indexToUglify] = this.uglifyString(result[indexToUglify]);

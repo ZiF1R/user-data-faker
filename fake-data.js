@@ -9,11 +9,11 @@ const setLocale = locale => faker.setLocale(locale);
 const setErrors = errorsPercentage =>
   dataUglifyService.ErrorsCount = errorsPercentage;
 
-const getFullName = () => ({
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  middleName: faker.name.middleName(),
-});
+// const getFullName = () => ({
+//   firstName: faker.name.firstName(),
+//   lastName: faker.name.lastName(),
+//   middleName: faker.name.middleName(),
+// });
 
 const getAddress = () => ({
   city: faker.address.city(),
@@ -22,14 +22,14 @@ const getAddress = () => ({
 
 const getPhone = () => faker.phone.phoneNumber();
 
-const getNextPage = () => {
+const getNextPage = page => {
   const rows = [];
 
-  for (let i = 0; i < 20; i++) {
-    const id = faker.mersenne.rand(1_000_000, 100_000);
-    let fullName = faker.name.findName();
-    let address = Object.values(getAddress()).join(", ");
-    let phone = getPhone();
+  for (let i = (page - 1) * 20; i < page * 20; i++) {
+    const id = faker.mersenne.rand(1000000, 100000);
+    const fullName = faker.name.findName();
+    const address = Object.values(getAddress()).join(", ");
+    const phone = getPhone();
 
     const row = {
       index: i + 1,
@@ -47,7 +47,9 @@ const getNextPage = () => {
   // it will produce unexpected behavior
   rows.map(row => {
     [row.fullName, row.address, row.phone] =
-      dataUglifyService.uglify([row.fullName, row.address, row.phone]);
+      dataUglifyService.uglify(
+        [row.fullName, row.address, row.phone], faker.locale
+      );
     return row;
   });
 

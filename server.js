@@ -30,7 +30,7 @@ const getNewPage = url => {
   setSeed(page + seed);
   setErrors(errors);
 
-  return getNextPage();
+  return getNextPage(page);
 };
 
 const server = http.createServer((req, res) => {
